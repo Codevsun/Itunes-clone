@@ -1,6 +1,10 @@
+'use client'
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function SideBar() {
+    const router = useRouter();
     return (
       <div className="hidden md:flex w-64 bg-[#141524] p-4 flex-col">
       {/* Logo */}
@@ -10,8 +14,9 @@ export default function SideBar() {
 
       {/* Navigation */}
       <nav className="space-y-2">
-        <button className="w-full justify-start text-white hover:bg-gray-700 flex items-center p-2 rounded">
+        <button className="w-full justify-start text-white hover:bg-gray-700 flex items-center p-2 rounded" onClick={() => router.push('/')}>
           <Image src="/assets/home.png" alt="Home" width={16} height={16} className="w-4 h-4 mr-3" />
+
           Home
         </button>
         <button className="w-full justify-start text-white hover:bg-gray-700 flex items-center p-2 rounded">

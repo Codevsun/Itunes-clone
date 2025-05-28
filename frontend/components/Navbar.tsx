@@ -1,10 +1,27 @@
 'use client'
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   return (
     <nav className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-[#18192a]">
@@ -35,7 +52,7 @@ export default function Navbar() {
         <button className="bg-[#3b5b7c] text-white px-3 py-2 rounded-lg font-medium hover:bg-[#4a6a8c] text-sm">Log in</button>
         <button className="bg-[#3b5b7c] text-white px-3 py-2 rounded-lg font-medium hover:bg-[#4a6a8c] text-sm">Sign up</button>
       </div>
-      <div className="relative flex items-center flex-shrink-0">
+      <div className="relative flex items-center flex-shrink-0" ref={dropdownRef}>
         <button 
           className="p-1.5 rounded-full hover:bg-[#23243a] text-gray-400"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
