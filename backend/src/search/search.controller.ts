@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { SearchService } from './search.service';
 import { CreateSearchDto } from './dto/create-search.dto';
 import { UpdateSearchDto } from './dto/update-search.dto';
@@ -6,6 +15,12 @@ import { UpdateSearchDto } from './dto/update-search.dto';
 @Controller('search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
+
+  @Get('itunes')
+  async searchItunes(@Query('term') term: string): Promise<any> {
+    console.log('Searching for:', term);
+    return this.searchService.search(term);
+  }
 
   @Post()
   create(@Body() createSearchDto: CreateSearchDto) {
