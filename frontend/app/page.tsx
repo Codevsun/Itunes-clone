@@ -17,32 +17,15 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call - replace with actual API endpoint
     const fetchPodcasts = async () => {
       try {
-        // Mock data - replace with actual API call
-        const mockPodcasts: Podcast[] = [
-          { id: '1', title: 'The Mel Robbins Podcast', author: 'Mel Robbins', rank: 1, authorColor: '#e3bd71'},
-          { id: '2', title: 'Deep Cover', author: 'Pushkin Industries', rank: 2, authorColor: '#e86491'},
-          { id: '3', title: 'Good Hang', author: 'Featuring Julia Hava', rank: 3, authorColor: '#cf8163'},
-          { id: '4', title: 'The Joe Rogan Experience', author: 'Joe Rogan', rank: 4, authorColor: '#6dc086'},
-          { id: '5', title: 'Crime Junkie', author: 'audiochuck', rank: 5, authorColor: '#ff78c9'},
-          { id: '6', title: 'Call Her Daddy', author: 'Alex Cooper', rank: 6, authorColor: '#7272df'},
-          { id: '7', title: 'This American Life', author: 'This American Life', rank: 7, authorColor: '#8cc1be'},
-          { id: '8', title: 'Serial', author: 'Serial Productions', rank: 8, authorColor: '#8cc1be'},
-          { id: '9', title: 'Conan O\'Brien Needs a Friend', author: 'Team Coco & Earwolf', rank: 9, authorColor: '#8cc1be'},
-          { id: '10', title: 'My Favorite Murder', author: 'Exactly Right', rank: 10, authorColor: '#8cc1be'},
-          { id: '11', title: 'SmartLess', author: 'Jason Bateman, Sean Hayes, Will Arnett', rank: 11, authorColor: '#8cc1be'},
-          { id: '12', title: 'The Daily', author: 'The New York Times', rank: 12, authorColor: '#8cc1be'},
-          { id: '13', title: 'Stuff You Should Know', author: 'iHeartPodcasts', rank: 13, authorColor: '#8cc1be'},
-          { id: '14', title: 'Radiolab', author: 'WNYC Studios', rank: 14, authorColor: '#8cc1be'},
-          { id: '15', title: 'The Tim Ferriss Show', author: 'Tim Ferriss', rank: 15, authorColor: '#8cc1be'},
-        ];
-
-        // Simulate loading delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        setPodcasts(mockPodcasts);
+        setLoading(true);
+        const response = await fetch('http://localhost:3000/artist');
+        if (!response.ok) {
+          throw new Error('Failed to fetch podcasts');
+        }
+        const data = await response.json();
+        setPodcasts(data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching podcasts:', error);
