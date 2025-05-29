@@ -1,57 +1,84 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { artists, tracks } from '../drizzle/schema';
+import { db } from '../drizzle/db';
+import { and, eq, isNotNull } from 'drizzle-orm';
 
 @Injectable()
 export class ArtistService {
-  private artists: CreateArtistDto[] = [
-    {
-      id: 1,
-      name: 'Artist 1',
-      artistUrl: 'https://artist1.com',
-    },
-    {
-      id: 2,
-      name: 'Artist 2',
-      artistUrl: 'https://artist2.com',
-    },
-  ];
-
-  create(createArtistDto: CreateArtistDto) {
-    const newArtist: CreateArtistDto = {
-      ...createArtistDto,
-    };
-    this.artists.push(newArtist);
+  async create(createArtistDto: CreateArtistDto) {
+    const [newArtist] = await db
+      .insert(artists)
+      .values(createArtistDto)
+      .returning();
     return newArtist;
   }
 
-  findAll() {
-    return this.artists;
+  async findAll() {
+    return await db.select().from(artists);
   }
 
-  findOne(id: number) {
-    return this.artists.find((artist) => artist.id === id);
-  }
-
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    const artistIndex = this.artists.findIndex((artist) => artist.id === id);
-    if (artistIndex >= 0) {
-      this.artists[artistIndex] = {
-        ...this.artists[artistIndex],
-        ...updateArtistDto,
-      };
-      return this.artists[artistIndex];
+  async findOne(id: number) {
+    if (isNaN(id)) {
+      throw new NotFoundException('Invalid artist ID');
     }
-    return null;
+    const [artist] = await db.select().from(artists).where(eq(artists.id, id));
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
+    return artist;
   }
 
-  remove(id: number) {
-    const artistIndex = this.artists.findIndex((artist) => artist.id === id);
-    if (artistIndex >= 0) {
-      const removedArtist = this.artists[artistIndex];
-      this.artists.splice(artistIndex, 1);
-      return removedArtist;
+  async update(id: number, updateArtistDto: UpdateArtistDto) {
+    if (isNaN(id)) {
+      throw new NotFoundException('Invalid artist ID');
     }
-    return null;
+    const [updatedArtist] = await db
+      .update(artists)
+      .set(updateArtistDto)
+      .where(eq(artists.id, id))
+      .returning();
+    if (!updatedArtist) {
+      throw new NotFoundException('Artist not found');
+    }
+    return updatedArtist;
+  }
+
+  async remove(id: number) {
+    if (isNaN(id)) {
+      throw new NotFoundException('Invalid artist ID');
+    }
+    const [deletedArtist] = await db
+      .delete(artists)
+      .where(eq(artists.id, id))
+      .returning();
+    if (!deletedArtist) {
+      throw new NotFoundException('Artist not found');
+    }
+    return deletedArtist;
+  }
+
+  async findAllTracks() {
+    const result = await db
+      .select({
+        title: tracks.name,
+        artist: artists.name,
+        coverImage: tracks.artworkUrl100,
+        previewUrl: tracks.previewUrl,
+        releaseDate: tracks.releaseDate,
+        genre: tracks.genre,
+        durationMs: tracks.durationMs,
+        isStreamable: tracks.isStreamable,
+        price: tracks.price,
+        explicitness: tracks.explicitness,
+        discNumber: tracks.discNumber,
+        trackNumber: tracks.trackNumber
+      })
+      .from(tracks)
+      .innerJoin(artists, eq(tracks.artistId, artists.id))
+      .where(isNotNull(tracks.name));
+    
+    return result;
   }
 }
