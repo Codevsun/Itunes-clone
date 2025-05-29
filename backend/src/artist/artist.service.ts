@@ -73,7 +73,7 @@ export class ArtistService {
         price: tracks.price,
         explicitness: tracks.explicitness,
         discNumber: tracks.discNumber,
-        trackNumber: tracks.trackNumber
+        trackNumber: tracks.trackNumber,
       })
       .from(tracks)
       .innerJoin(artists, eq(tracks.artistId, artists.id))
