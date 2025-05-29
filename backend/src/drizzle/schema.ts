@@ -13,6 +13,7 @@ export const artists = pgTable('artists', {
   id: bigint('id', { mode: 'number' }).primaryKey(), // iTunes artistId
   name: text('name').notNull(),
   artistUrl: text('artist_url'),
+  createdAt: timestamp('created_at', { withTimezone: true }),
 });
 
 // === 2. Collections Table (Albums) ===
@@ -53,4 +54,5 @@ export const tracks = pgTable('tracks', {
   durationMs: integer('duration_ms'),
   genre: text('genre'),
   isStreamable: boolean('is_streamable'),
+  createdAt: timestamp('created_at', { withTimezone: true }),
 });
