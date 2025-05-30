@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { useSearch } from './SearchContext';
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { performSearch, isSearching } = useSearch();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -26,15 +28,8 @@ export default function Navbar() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      try {
-        const response = await fetch(`http://localhost:3000/search/itunes?term=${encodeURIComponent(searchTerm)}`);
-        const data = await response.json();
-        // Handle the search results here
-        console.log(data);
-      } catch (error) {
-        console.error('Search failed:', error);
-      }
+    if (searchTerm.trim() && !isSearching) {
+      await performSearch(searchTerm);
     }
   };
 
@@ -56,19 +51,30 @@ export default function Navbar() {
       </div>
       {/* Search */}
       <form onSubmit={handleSearch} className="flex-1 flex justify-center min-w-0 px-1 sm:px-2">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search through over 70 million podcasts and episodes..."
-          className="w-full max-auto bg-[#18192a] border border-[#50515d] rounded-lg text-center px-3 sm:px-5 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#23243a] text-sm"
-        />
+        <div className="relative w-full max-auto">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search through over 70 million podcasts and episodes..."
+            disabled={isSearching}
+            className={`w-full bg-[#18192a] border border-[#50515d] rounded-lg text-center px-3 sm:px-5 py-2 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#23243a] text-sm ${
+              isSearching ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          />
+          {isSearching && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-white"></div>
+            </div>
+          )}
+        </div>
       </form>
       {/* Auth Buttons */}
       <div className="hidden sm:flex items-center gap-1 flex-shrink-0">
         <button className="bg-[#3b5b7c] text-white px-3 py-2 rounded-lg font-medium hover:bg-[#4a6a8c] text-sm">Log in</button>
         <button className="bg-[#3b5b7c] text-white px-3 py-2 rounded-lg font-medium hover:bg-[#4a6a8c] text-sm">Sign up</button>
       </div>
+
       <div className="relative flex items-center flex-shrink-0" ref={dropdownRef}>
         <button 
           className="p-1.5 rounded-full hover:bg-[#23243a] text-gray-400"
@@ -116,4 +122,4 @@ export default function Navbar() {
       </div>
     </nav>
   );
-} 
+}

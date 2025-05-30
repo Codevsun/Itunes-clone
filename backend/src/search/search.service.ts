@@ -5,6 +5,7 @@ import axios from 'axios';
 import { db } from '../drizzle/db';
 import { artists, collections, tracks } from '../drizzle/schema';
 
+
 @Injectable()
 export class SearchService {
   private readonly ITUNES_API_BASE = 'https://itunes.apple.com/search';
@@ -79,6 +80,7 @@ export class SearchService {
               durationMs: result.trackTimeMillis,
               genre: result.primaryGenreName,
               isStreamable: result.isStreamable,
+              createdAt: new Date(),
             }).onConflictDoUpdate({
               target: tracks.id,
               set: {

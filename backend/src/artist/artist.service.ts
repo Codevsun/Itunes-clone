@@ -3,7 +3,7 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { artists, tracks } from '../drizzle/schema';
 import { db } from '../drizzle/db';
-import { eq, isNotNull, asc } from 'drizzle-orm';
+import { eq, isNotNull, desc } from 'drizzle-orm';
 
 @Injectable()
 export class ArtistService {
@@ -78,7 +78,7 @@ export class ArtistService {
       .from(tracks)
       .innerJoin(artists, eq(tracks.artistId, artists.id))
       .where(isNotNull(tracks.name))
-      .orderBy(asc(tracks.trackNumber));
+      .orderBy(desc(tracks.createdAt));
     return result;
   }
 }
