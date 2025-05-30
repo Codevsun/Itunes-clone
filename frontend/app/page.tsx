@@ -21,6 +21,10 @@ interface Track {
 export default function Home() {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const tracksPerPage = 15;
+
+  const artistColors = ['#e3bd71', '#e86491', '#cf8163', '#6dc086', '#ff78c9', '#7272df', '#8cc1be'];
 
   useEffect(() => {
     const fetchTracks = async () => {
@@ -57,11 +61,22 @@ export default function Home() {
     console.log('More options for:', track);
   };
 
+  // Pagination logic
+  const indexOfLastTrack = currentPage * tracksPerPage;
+  const indexOfFirstTrack = indexOfLastTrack - tracksPerPage;
+  const currentTracks = tracks.slice(indexOfFirstTrack, indexOfLastTrack);
+  const totalPages = Math.ceil(tracks.length / tracksPerPage);
+
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (loading) {
     return (
       <div className="p-6 bg-[#161727]">
         <div className="mb-6">
-          <h1 className="text-white text-2xl font-bold mb-2">Trending tracks in all genres</h1>
+          <h1 className="text-white text-2xl font-bold mb-2">Tracks in all genres</h1>
           <p className="text-gray-400 text-sm">Loading...</p>
         </div>
         <div className="h-px bg-gray-800 w-full mb-6"></div>
@@ -83,9 +98,28 @@ export default function Home() {
   return (
     <div className="p-6 bg-[#161727] min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 bg-[#161727] z-10 pb-4 mt-6">
-        <h1 className="text-white text-l font-bold">Trending tracks in all genres</h1>
-        <p className="text-gray-400 text-sm">The world&apos;s most popular tracks</p>
+      <div className="sticky top-0 bg-[#161727] z-10 pb-4 mt-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-white text-l font-bold">Trending tracks in all genres</h1>
+          <p className="text-gray-400 text-sm">The world&apos;s most popular tracks</p>
+        </div>
+        <div className="flex items-center gap-1">
+        <button 
+            className="p-1.5 rounded-full hover:bg-[#23243a] text-gray-400"
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <Image src="/assets/right.svg" alt="previous" width={15} height={15} />
+          </button>
+          <button 
+            className="p-1.5 rounded-full hover:bg-[#23243a] text-gray-400"
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <Image src="/assets/left.svg" alt="next" width={15} height={15} />
+          </button>
+      
+        </div>
       </div>
       
       {/* Separator */}
@@ -93,7 +127,7 @@ export default function Home() {
       
       {/* Track Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {tracks.map((track, index) => (
+        {currentTracks.map((track, index) => (
           <div 
             key={index}
             className="bg-[#18192a] rounded-lg overflow-hidden hover:bg-[#23243a] transition-colors cursor-pointer"
@@ -115,12 +149,8 @@ export default function Home() {
             </div>
             <div className="p-3 flex items-start justify-between">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-gray-400 text-s">#{index + 1}</h3>
-                  <h3 className="text-white font-medium text-sm line-clamp-2 truncate">{track.title}</h3>
-                </div>
-                <p className="ml-6 text-gray-400 text-xs">{track.artist}</p>
-                <p className="ml-6 text-gray-500 text-xs">{track.genre}</p>
+                <h3 className="text-white font-medium text-sm line-clamp-2 truncate">{track.title}</h3>
+                <p style={{color: artistColors[Math.floor(Math.random() * artistColors.length)]}} className="text-xs">{track.artist}</p>
               </div>
               <button 
                 className="p-1 rounded hover:bg-[#2a2b3d] transition-colors"

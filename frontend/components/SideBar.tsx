@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function SideBar() {
     const router = useRouter();
     return (
-      <div className="hidden md:flex w-64 bg-[#141524] p-4 flex-col">
+      <div className="hidden md:flex w-64 bg-[#141524] p-4 flex-col border-r border-gray-700">
       {/* Logo */}
       <div className="flex items-center mb-8">
         <Image src="/assets/logo.svg" alt="Logo" width={52} height={52} className="w-12 h-12" />
@@ -36,7 +36,7 @@ export default function SideBar() {
           <button className="w-full justify-start text-white hover:bg-gray-700 flex items-center p-2 rounded">
             <Image src="/assets/My Podcasts.svg" alt="Podcast" width={16} height={16} className="w-4 h-4 mr-3" />
             My Podcasts
-          </button>
+        </button>
           <button className="w-full justify-start text-white hover:bg-gray-700 flex items-center p-2 rounded">
             <Image src="/assets/Recents.svg" alt="Recents" width={16} height={16} className="w-4 h-4 mr-3" />
             Recents
