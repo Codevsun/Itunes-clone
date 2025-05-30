@@ -1,6 +1,7 @@
 # Project Documentation
 
 ## Solution Approach
+
 1. Started by thoroughly testing and analyzing the API architecture to understand its capabilities and limitations
 2. Created a detailed layout and architecture plan for the solution
 ![Project Architecture Diagram](./frontend/public/assets/projSol.png)
@@ -45,19 +46,14 @@
 - React 19
 - TypeScript
 - TailwindCSS 4
-- ESLint 9
-- Prettier
-- Tailwind Scrollbar
+
 
 ### Backend Technologies
 - NestJS 11
 - TypeScript
 - PostgreSQL
 - Drizzle ORM
-- Jest for testing
-- Class Validator
-- Class Transformer
-- RxJS
+
 
 ## Development Challenges 
 
@@ -76,14 +72,6 @@
    - Structuring the application for scalability
    - Implementing proper error handling patterns
    - Setting up efficient database schemas
-
-4. Integration Challenges
-   - Ensuring type safety between frontend and backend
-   - Managing CORS and security configurations
-   - Handling API rate limiting and optimization
-   - Implementing proper error handling across the stack
-
-
 
 
 ## Project Structure
@@ -124,6 +112,29 @@
    - Add more API endpoints
    - Implement caching
    - Enhance security measures
+
+## 9. Future Search Improvements
+
+1. Elasticsearch Integration
+   - Implement Elasticsearch for improved search accuracy and speed
+   - Enable fuzzy matching and typo tolerance
+   - Support for partial word matches and phonetic matching
+   - Better handling of special characters and diacritics
+
+2. Smart Search Features
+   - Implement spell checking and suggestions
+   - Add auto-complete functionality
+   - Support natural language processing
+   - Handle synonyms and related terms
+
+3. Ranking Algorithm
+   - Develop a basic ranking system based on:
+     - Relevance score
+     - Popularity metrics
+     - Release date
+     - User engagement data
+   - Implement personalized ranking based on user preferences
+   - Support for boosting specific fields
 
 ## Conclusion
 This project demonstrates a modern full-stack application using cutting-edge technologies. The challenges faced during development have led to valuable learning experiences and improved code quality. The separation of concerns between frontend and backend, along with the use of TypeScript throughout the stack, has resulted in a maintainable and scalable application. 
