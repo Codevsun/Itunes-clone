@@ -1,4 +1,4 @@
-# Thamanyah Task
+# Itunes clone
 
 A full-stack web application built with Next.js and NestJS.
 A full-stack web application for searching and storing music tracks using the iTunes API. Built with **Next.js** for the frontend and **NestJS** for the backend. Data is stored in a **PostgreSQL** or **MongoDB** database.
